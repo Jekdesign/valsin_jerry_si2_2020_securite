@@ -1,0 +1,42 @@
+version: "2"
+
+services:
+  nginx:
+    ports:
+      - 80:3001
+      - 90:3002
+      - 443:443
+    image: nginx:alpine
+    restart: always
+
+  auth-api:
+    container_name: auth-api
+    build: backend/auth-api/
+    ports:
+      - "3001:3001"
+    depends_on:
+      - nginx
+    #links:
+    #  - mongodb
+
+  products-api:
+    container_name: products-api
+    build: backend/products-api/
+    ports:
+      - "3002:3002"
+    depends_on:
+      - nginx
+    #links:
+    #  - mongodb
+
+  frontend:
+    container_name: client
+    build: frontend
+    ports:
+      - "3000:3000"
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
